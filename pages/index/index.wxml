@@ -1,0 +1,21 @@
+<!--index.wxml-->
+<view class="index-container">
+  <!-- <image src="{{bgimage}}" class="container"></image> -->
+  <view class="index-header">
+   <!-- <view class="title-1">加马智能语音能力体验平台</view>
+   <view class="title-2">欢迎您!</view> -->
+  </view>
+  <view class="index-body">
+    <view class="handle-btn">
+      <view class="buttons item-1" bindtap="bindViewTap" data-text="new">
+        <text>新增PDR</text>
+      </view>
+      <view class="buttons item-2"  bindtap="bindViewTap" data-text="history">
+        <text>历史记录</text>
+      </view>
+    </view>
+  </view>
+  <view class="index-footer">
+    <!-- <image src="{{footlogo}}"></image> -->
+  </view>
+</view>

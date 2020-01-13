@@ -1,0 +1,41 @@
+<!--index.wxml-->
+<view class="historypdr-container">
+   <view class="historypdr-header">
+      <view class="historypdr-center">
+        <image src="{{title}}"></image>
+        <text class="direction">{{direction}}</text>
+        <text class="angle">{{angle}}°</text>
+      </view>
+  </view>
+   <movable-area scale-area="true">
+    <movable-view class="max" direction="all" scale="true">
+      <canvas canvas-id='canvasQr' class="canvas"></canvas>
+    </movable-view>
+  </movable-area>
+  <view class="historypdr-footer">
+   <view class="historypdr-buttons">
+     <view class="historypdr-reset" bindtap="resetHandle">
+      <text>{{resetTxt=='reset'?'重置':'回到起点'}}</text>
+    </view>
+    <view class="historypdr-start" bindtap="startHandle">
+      <text>{{startTxt=='go'?'开始寻车':'结束寻车'}}</text>
+    </view>
+   </view>
+
+    <view class="record-history">
+      <scroll-view scroll-y="true" style="height: 100%;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+        <view class="list-header">
+          <view>距离</view>
+          <view>时长</view>
+          <view>方向</view>
+        </view>
+        <view wx:for="{{recordList}}" wx:key="index" wx:for-item ="item" class="list-body" id="demo{{index}}">
+         <view>{{item.steps}}</view>
+          <view>{{item.times}}</view>
+          <view>{{item.direction}}</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>
+  

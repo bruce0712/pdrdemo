@@ -1,0 +1,49 @@
+<!--index.wxml-->
+<view class="newPDR-container">
+   <view class="newPDR-header">
+      <view class="newPDR-center">
+        <image src="{{title}}"></image>
+        <text class="direction">{{direction}}</text>
+        <text class="angle">{{angle}}°</text>
+      </view>
+  </view>
+   <movable-area scale-area="true">
+      <movable-view class="max" direction="all" scale="true">
+        <canvas canvas-id='canvasQr' class="canvas"></canvas>
+      </movable-view>
+    </movable-area>
+  
+  <view class="newPDR-footer">
+    <view class="newPDR-buttons {{text=='start'?'btn-start':'btn-stop'}}" bindtap="recordStart">
+      <text>{{text=='start'?'开始记录':'停止记录'}}</text>
+    </view>
+    <view class="record-history">
+      <scroll-view scroll-y="true" style="height: 100%;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+        <view class="list-header">
+          <view>距离</view>
+          <view>时长</view>
+          <view>方向</view>
+        </view>
+         <view wx:for="{{recordList}}" wx:key="index" wx:for-item ="item" class="list-body" id="demo{{index}}">
+         <view>{{item.steps}}</view>
+          <view>{{item.times}}</view>
+          <view>{{item.direction}}</view>
+         </view>
+      </scroll-view>
+      </view>
+  </view>
+  
+  
+	<!-- <button type="primary" wx:if="{{start}}" class="buttom" bindtap="startAccelerometer">开始记录</button>
+	<button type="primary" wx:if="{{stop}}" class="buttom" bindtap="stopAccelerometer">停止记录 </button>
+  <canvas canvas-id="canvasQr" style ="width:300px ; min-height:300px;display:block;margin:0 auto;border:1px solid black;"></canvas>
+  <view class="usermotto">
+    <text class="user-motto">总步数:{{currentStep}};上一个方向:{{lastRotate}}；当前方向：{{nowRotate}}</text>
+  </view>
+  <view class="usermotto" wx:for="{{stepData}}" wx:for-item="item">
+	<text class="user-motto" >约{{item.step}}步;约{{item.range}}米;约{{item.time}}秒,约{{item.rotate}}度;{{item.direction}}</text> -->
+	<!-- <text class="user-motto" >lastX:{{item.lastX}};lastY:{{item.lastY}};x:{{item.x}};y:{{item.y}}</text> -->
+	<!-- <text class="user-motto">计算角度{{item.waitCalRotate}};在方向{{item.rotate}}上行走{{item.step}}步；lastX:{{item.lastX}};lastY:{{item.lastY}};x:{{item.x}};y:{{item.y}}</text> -->
+  <!-- </view> -->
+  
+</view>
