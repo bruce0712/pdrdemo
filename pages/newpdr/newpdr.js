@@ -48,43 +48,11 @@ Page({
   data: {
     fx:'../../images/fx.png',
     text: 'start',
-    direction: '东南',//方向
+    //direction: '东南',//方向
     angle: '120',//角度
     disabled:'',
-    recordList: [{
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    }, {
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    },
-    {
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    },
-    {
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    },
-    {
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    },
-    {
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    },
-    {
-      steps: '约12000步',
-      times: '约42米 约5分36秒',
-      direction: '东南 345'
-    }],
+    recordList: [],
+    scale: 1,
     start: true,
     stop: false,
     x: "",
@@ -124,6 +92,7 @@ Page({
         y: res.y,
         z: res.z
       });
+      
       vm.onSensorChanged(res.x, res.y, res.z); //记录数据
     });
     wx.onCompassChange(function (res) {
@@ -499,30 +468,63 @@ Page({
       url: "../demo/index"
     })
   },
-  recordStart: function () {
-    var vm = this;
-    if (this.data.text == 'start') {
-      this.setData({
-        text: 'end'
-      })
-      this.startAccelerometer();
-    } else {
-      if (this.data.disabled == 'disabled') return;
-      wx.showModal({
-        title: '是否结束寻车？',
-        content: '点击取消，返回继续寻车',
-        success(res) {
-          if (res.confirm) {
-            vm.setData({
-              disabled:'disabled'
-            })
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
-      })
-    }
+  recordStart: function (e) {
+    //this.getData();
+    
+    // var vm = this;
+    // if (this.data.text == 'start') {
+    //   this.setData({
+    //     text: 'end'
+    //   })
+    //   this.startAccelerometer();
+    // } else {
+    //   if (this.data.disabled == 'disabled') return;
+    //   wx.showModal({
+    //     title: '是否结束寻车？',
+    //     content: '点击取消，返回继续寻车',
+    //     success(res) {
+    //       if (res.confirm) {
+    //         vm.setData({
+    //           disabled:'disabled'
+    //         })
+    //       } else if (res.cancel) {
+    //         console.log('用户点击取消')
+    //       }
+    //     }
+    //   })
+    // }
 
-
+    let scale = this.data.scale;
+    this.setData({
+      scale: scale + 0.1
+    });
+    context.translate(scale, scale);
+    console.log(context);
+  },
+  getData(){
+    wx.request({
+      url: 'http://16861e90p7.imwork.net/icmh-client/common/pdrFindCar.action',
+      //data: param,
+      method:'post',
+      header: {
+        'content-type': 'application/json'
+      },
+      method: 'post',
+      responseType: 'text',
+      success: function (res) {
+        console.log(res);
+       // that.showList(param.isFirst, res.data.data);
+      },
+      fail: function (res) {debugger; },
+      complete: function (res) {debugger;},
+    })
+  },
+  onScale(e) {
+    let {x,y,scale} = e.detail;
+    // this.setData({
+    //   scale
+    // })
+    context.translate(scale,scale)
+    console.log(e.detail)
   }
 })

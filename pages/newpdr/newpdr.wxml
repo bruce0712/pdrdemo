@@ -8,16 +8,16 @@
       </view>
   </view>
    <movable-area scale-area="true">
-      <movable-view class="max" direction="all" scale="true">
-        <canvas canvas-id='canvasQr' class="canvas"></canvas>
+      <movable-view x="{{}}" y="{{y}}" class="max" direction="all" scale="true" scale-min="0.3" scale-max="4" scale-value="{{scale}}" bindscale="onScale">
+        <canvas canvas-id='canvasQr' class="canvas" style="transform: scale({{scale}});"></canvas>
       </movable-view>
     </movable-area>
   
   <view class="newPDR-footer">
-    <view class="newPDR-buttons {{text=='start'?'btn-start':'btn-stop'}} {{disabled}}" bindtap="recordStart">
+    <view class="newPDR-buttons {{text=='start'?'btn-start':'btn-stop'}} {{disabled}}" bindtap="recordStart" data-orderNo="abc">
       <text>{{text=='start'?'开始记录':'停止记录'}}</text>
     </view>
-    <view class="record-history">
+    <view class="record-history" wx:if="{{recordList.length>0}}">
       <scroll-view scroll-y="true" style="height: 100%;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
         <view class="list-header">
           <view>距离</view>
