@@ -2,7 +2,7 @@
 <view class="historypdr-container">
    <view class="historypdr-header">
       <view class="historypdr-center">
-        <image src="{{title}}"></image>
+        <image src="{{fx}}"></image>
         <text class="direction">{{direction}}</text>
         <text class="angle">{{angle}}°</text>
       </view>
@@ -17,8 +17,10 @@
      <view class="historypdr-reset" bindtap="resetHandle">
       <text>{{resetTxt=='reset'?'重置':'回到起点'}}</text>
     </view>
-    <view class="historypdr-start" bindtap="startHandle">
-      <text>{{startTxt=='go'?'开始寻车':'结束寻车'}}</text>
+    <view class="historypdr-start {{startTxt=='end'?'disabled':''}}" bindtap="startHandle">
+      <text wx:if="{{startTxt=='go'}}">开始寻车</text>
+      <text wx:if="{{startTxt=='stop'}}">结束寻车</text>
+      <text wx:if="{{startTxt=='end'}}">已结束</text>
     </view>
    </view>
 

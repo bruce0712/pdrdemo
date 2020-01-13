@@ -46,6 +46,7 @@ var baseN = 5;
 var isfirststep = true;
 Page({
   data: {
+    fx: '../../images/fx.png',
     resetTxt:'reset',
     startTxt:'go',
     direction:'东南',//方向
@@ -289,22 +290,25 @@ Page({
  * 重置按钮
  */
   resetHandle:function(){
+    let vm = this;
     if (this.data.resetTxt == 'reset') {
-      this.setData({
-        resetTxt: 'back'
-      })
-      this.startAccelerometer();
-    } else {
       wx.showModal({
-        title: '是否结束寻车？',
+        title: '是否重置寻车路线',
         content: '点击取消，返回继续寻车',
         success(res) {
           if (res.confirm) {
-            console.log('用户点击确定')
+            console.log('用户确认重置')
+            vm.startAccelerometer();
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
         }
+      })
+      
+    } else {
+      vm.setData({
+        startTxt: 'go',
+        resetTxt: 'reset'
       })
     }
 
@@ -313,9 +317,11 @@ Page({
    * 开始寻车
    */
   startHandle:function (){
+    let vm = this;
     if (this.data.startTxt == 'go') {
       this.setData({
-        startTxt: 'end'
+        startTxt: 'stop',
+        //resetTxt:'back'
       })
       this.startAccelerometer();
     }else {
@@ -324,9 +330,11 @@ Page({
         content: '点击取消，返回继续寻车',
         success(res) {
           if (res.confirm) {
-            wx.navigateTo({
-              url: '../history/history'
-            })
+           vm.setData({
+             startTxt:'end',
+             resetTxt: 'back'
+           })
+           
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
@@ -345,6 +353,14 @@ Page({
     context.setStrokeStyle('#000000');
     context.stroke();
     context.draw(true);
+
+    //需要调整文字
+    wx.showModal({
+      title: '建议将起始方向罗盘度数调整为',
+      content: '346°北',
+      showCancel: false,
+      confirmText: '知道了'
+    })
 
   },
   dramCanvas: function (context) {

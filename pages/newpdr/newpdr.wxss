@@ -43,18 +43,21 @@ movable-area {
   width: 52rpx;
   height: 52rpx;
   display: inline-block;
+  vertical-align: middle;
 }
 .direction{
   font-family: PingFangSC-Regular;
   font-size: 32rpx;
   color: #193651;
   letter-spacing: 0;
+  vertical-align: middle;
 }
 .angle {
   font-family: PingFangSC-Medium;
   font-size: 44rpx;
   color: #4087FF;
   letter-spacing: 0;
+  vertical-align: middle;
 }
 .newPDR-footer{
   max-height: 710rpx;
@@ -94,7 +97,9 @@ movable-area {
 .btn-stop {
   background: #F36A6A;
 }
-
+.disabled {
+  background: #B2B2B2 !important;
+}
 .list-header {
   display: flex;
   align-items:center;

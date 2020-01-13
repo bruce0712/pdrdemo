@@ -2,7 +2,7 @@
 <view class="newPDR-container">
    <view class="newPDR-header">
       <view class="newPDR-center">
-        <image src="{{title}}"></image>
+        <image src="{{fx}}"></image>
         <text class="direction">{{direction}}</text>
         <text class="angle">{{angle}}°</text>
       </view>
@@ -14,7 +14,7 @@
     </movable-area>
   
   <view class="newPDR-footer">
-    <view class="newPDR-buttons {{text=='start'?'btn-start':'btn-stop'}}" bindtap="recordStart">
+    <view class="newPDR-buttons {{text=='start'?'btn-start':'btn-stop'}} {{disabled}}" bindtap="recordStart">
       <text>{{text=='start'?'开始记录':'停止记录'}}</text>
     </view>
     <view class="record-history">

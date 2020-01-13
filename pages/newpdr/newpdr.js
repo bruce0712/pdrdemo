@@ -46,9 +46,11 @@ var baseN = 5;
 var isfirststep = true;
 Page({
   data: {
+    fx:'../../images/fx.png',
     text: 'start',
     direction: '东南',//方向
     angle: '120',//角度
+    disabled:'',
     recordList: [{
       steps: '约12000步',
       times: '约42米 约5分36秒',
@@ -498,19 +500,22 @@ Page({
     })
   },
   recordStart: function () {
-    let text = this.data.text == 'start' ? 'end' : 'start';
+    var vm = this;
     if (this.data.text == 'start') {
       this.setData({
         text: 'end'
       })
       this.startAccelerometer();
     } else {
+      if (this.data.disabled == 'disabled') return;
       wx.showModal({
         title: '是否结束寻车？',
         content: '点击取消，返回继续寻车',
         success(res) {
           if (res.confirm) {
-            console.log('用户点击确定')
+            vm.setData({
+              disabled:'disabled'
+            })
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
