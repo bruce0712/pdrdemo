@@ -8,10 +8,10 @@
       </view>
   </view>
    <movable-area scale-area="true">
-    <movable-view class="max" direction="all" scale="true">
-      <canvas canvas-id='canvasQr' class="canvas"></canvas>
-    </movable-view>
-  </movable-area>
+		<movable-view x="{{-255}}" y="{{-144}}" class="max"  direction="all">
+			<canvas canvas-id='canvasQr' class="canvas"></canvas>
+		</movable-view>
+	</movable-area>
   <view class="historypdr-footer">
    <view class="historypdr-buttons">
      <view class="historypdr-reset" bindtap="resetHandle">
@@ -24,7 +24,7 @@
     </view>
    </view>
 
-    <view class="record-history">
+    <view class="record-history" wx:if="{{recordList.length > 0}}">
       <scroll-view scroll-y="true" style="height: 100%;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
         <view class="list-header">
           <view>距离</view>
@@ -32,9 +32,9 @@
           <view>方向</view>
         </view>
         <view wx:for="{{recordList}}" wx:key="index" wx:for-item ="item" class="list-body" id="demo{{index}}">
-         <view>{{item.steps}}</view>
-          <view>{{item.times}}</view>
-          <view>{{item.direction}}</view>
+         <view>约{{item.step}}步</view>
+          <view>约{{item.rangeMeter}}米 约{{item.time}}秒</view>
+          <view>{{item.direction}} {{item.rotate}}</view>
         </view>
       </scroll-view>
     </view>

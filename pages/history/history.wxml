@@ -1,8 +1,9 @@
+<wxs src="filter.wxs" module="filter" />
 <view class="history-container">
-    <block wx:for-items="{{historyList}}" wx:for-item="page" wx:key="*item">
+    <block wx:for="{{historyList}}">
       
-      <view data-id="{{page.id}}" bindtap="forward" class="navigator" role="navigator">
-        <view class="navigator-text">{{page.text}}</view>
+      <view data-orderNo="{{item.orderNo}}" bindtap="forward" class="navigator" role="navigator">
+        <view class="navigator-text">{{item.createdDate}}</view>
       <view class="navigator-arrow"></view>
       </view>
     </block>
