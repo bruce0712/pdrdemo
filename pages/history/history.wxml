@@ -1,15 +1,16 @@
 <wxs src="filter.wxs" module="filter" />
 <view class="history-container">
+  <scroll-view scroll-y="true" style="height: 100%">
     <block wx:for="{{historyList}}">
-      
       <view data-orderNo="{{item.orderNo}}" bindtap="forward" class="navigator" role="navigator">
         <view class="navigator-text">{{item.createdDate}}</view>
       <view class="navigator-arrow"></view>
       </view>
     </block>
-       <view class="history-footer">
-        <view class="history-buttons" bindtap="back">
-          <text>返回</text>
-        </view>
+  </scroll-view>
+  <view class="history-footer">
+    <view class="history-buttons" bindtap="back">
+      <text>返回</text>
     </view>
+  </view>
 </view>

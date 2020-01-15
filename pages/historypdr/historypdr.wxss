@@ -73,7 +73,6 @@ movable-area {
   bottom: 0;
 }
 .record-history{
-  margin-top:42rpx; 
   max-height: 576rpx;
   height: 576rpx;
   width: 100%;
@@ -91,6 +90,7 @@ movable-area {
   justify-content:center;
   background: transparent;
   font-size: 40rpx;
+  margin-bottom:42rpx; 
 } 
 .historypdr-reset{
   height: 90rpx;

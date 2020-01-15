@@ -18,13 +18,13 @@
 			<text>{{text=='start'?'开始记录':'停止记录'}}</text>
 		</view>
 		<view class="record-history" wx:if="{{stepData.length > 0}}">
-			<scroll-view scroll-y="true" style="height: 100%;" bindscrolltoupper="upper" bindscrolltolower="lower"
+      <view class="list-header">
+          <view>距离</view>
+          <view>时长</view>
+          <view>方向</view>
+      </view>
+			<scroll-view scroll-y="true" style="height: calc(100% - 86rpx);" bindscrolltoupper="upper" bindscrolltolower="lower"
 			 scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-				<view class="list-header">
-					<view>距离</view>
-					<view>时长</view>
-					<view>方向</view>
-				</view>
 				<view wx:for="{{stepData}}" wx:key="index" wx:for-item="item" class="list-body" id="demo{{index}}">
 					<view>约{{item.step}}步</view>
 					<view>约{{item.rangeMeter}}米 约{{item.time}}秒</view>

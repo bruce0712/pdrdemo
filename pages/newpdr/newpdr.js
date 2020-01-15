@@ -116,7 +116,7 @@ Page({
 					nowRotate: calRatate,
 					lastRotate: lastRotate
 				});
-				if (Math.abs(nowRotate - lastRotate) > 20) { //表示方向发生偏移
+				if (Math.abs(nowRotate - lastRotate) > 30) { //表示方向发生偏移
 					nowStep = step; //目前总步数
 					nowTime = Date.now(); //当前时间
 
@@ -278,7 +278,7 @@ Page({
 		order.record = data;
 		console.log(JSON.stringify(order));
 		wx.request({
-			url: 'http://16861e90p7.imwork.net/icmh-client/common/pdrFindCar.action', //仅为示例，并非真实的接口地址
+			url: 'http://47.92.174.67/icmh-client/common/pdrFindCar.action', //仅为示例，并非真实的接口地址
 			data: JSON.stringify(
 				order
 			),
@@ -296,7 +296,7 @@ Page({
 		  success: res => {
 			console.log(res.code)
 			wx.request({
-				url: 'http://16861e90p7.imwork.net/icmh-client/customer/getUserInfoByCode.action',
+				url: 'http://47.92.174.67/icmh-client/customer/getUserInfoByCode.action',
 				data:{"code":res.code,"appCode":'pdr'},
 				header: {
 					'content-type': 'application/json' // 默认值

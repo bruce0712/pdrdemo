@@ -1,4 +1,5 @@
 // pages/history/history.js
+import util from '../../utils/util.js'
 const app = getApp();
 Page({
 
@@ -25,32 +26,6 @@ Page({
       url: '../historypdr/historypdr'
     })
   },
-  formatDate:function(date){
-  	var date = new Date(date),
-  		Y = date.getFullYear(),
-  		m = date.getMonth() + 1,
-  		d = date.getDate(),
-  		H = date.getHours(),
-  		i = date.getMinutes(),
-  		s = date.getSeconds();
-  	if (m < 10) {
-  		m = '0' + m;
-  	}
-  	if (d < 10) {
-  		d = '0' + d;
-  	}
-  	if (H < 10) {
-  		H = '0' + H;
-  	}
-  	if (i < 10) {
-  		i = '0' + i;
-  	}
-  	if (s < 10) {
-  		s = '0' + s;
-  	}
-  	var t = Y + '-' + m + '-' + d + ' ' +H +':'+i+':'+s ;
-  	return t;
-  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -58,7 +33,7 @@ Page({
 	  var vm = this;
 	var userId = "0332zwpn0N0aBm1Rcnmn0xmRpn02zwpi";
 	wx.request({
-		url: 'http://16861e90p7.imwork.net/icmh-client/common/getRecords.action', 
+		url: 'http://47.92.174.67/icmh-client/common/getRecords.action', 
 		data: JSON.stringify({
 			userId:userId
 		}),
@@ -67,6 +42,9 @@ Page({
 		},
 		method: 'POST',
 		success(res) {
+      Array.from(res.data.data||'').forEach(item=>{
+        item.createdDate = util.formatTime(new Date(item.createdDate));
+      })
 			vm.setData({
 				historyList: res.data.data
 			});

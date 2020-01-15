@@ -50,8 +50,6 @@ Page({
 		fx: '../../images/fx.png',
 		resetTxt: 'reset',
 		startTxt: 'go',
-		direction: '东南', //方向
-		angle: '120', //角度
 		recordList: [],
 		start: true,
 		stop: false,
@@ -71,6 +69,7 @@ Page({
 	startAccelerometer: function() {
 		var vm = this;
 		isopen = true;
+    context.translate(450, 450)
 		wx.startAccelerometer({ //开始加速度计
 			interval: 'game'
 		});
@@ -114,7 +113,7 @@ Page({
 					nowRotate: calRatate,
 					lastRotate: lastRotate
 				});
-				if (Math.abs(nowRotate - lastRotate) > 15) { //表示方向发生偏移
+				if (Math.abs(nowRotate - lastRotate) > 30) { //表示方向发生偏移
 					nowStep = step; //目前总步数
 					nowTime = Date.now(); //当前时间
 
@@ -217,23 +216,20 @@ Page({
 							y = parseFloat(lastY) - Math.cos(2 * Math.PI / 360 * waitCalRotate) * dataJson.range * baseN;
 							break;
 					}
-					dataJson.lastX = (parseFloat(lastX) + parseFloat(150)).toFixed(2);
-					dataJson.lastY = (parseFloat(lastY) + parseFloat(150)).toFixed(2);
-					dataJson.x = (parseFloat(x) + parseFloat(150)).toFixed(2);
-					dataJson.y = (parseFloat(y) + parseFloat(150)).toFixed(2);
+					dataJson.lastX = (parseFloat(lastX) + parseFloat(450)).toFixed(2);
+					dataJson.lastY = (parseFloat(lastY) + parseFloat(450)).toFixed(2);
+					dataJson.x = (parseFloat(x) + parseFloat(450)).toFixed(2);
+					dataJson.y = (parseFloat(y) + parseFloat(450)).toFixed(2);
 					dataJson.waitCalRotate = waitCalRotate;
 					data.push(dataJson);
-					//渲染到页面
-					vm.setData({
-						stepData: data
-					});
-					vm.dramCanvas(context);
+				
 					lastX = x;
 					lastY = y;
 
 					lastRotate = calRatate; //发生方向偏移后将当前点作为起始点
 					lastStep = nowStep; //发生方向偏移后将当前步数作为起始步数
 					lastTime = nowTime; //发生方向偏移后将当前时间作为起始时间
+          vm.dramCanvas();
 				}
 			}
 		});
@@ -260,7 +256,8 @@ Page({
 				success(res) {
 					if (res.confirm) {
 						console.log('用户确认重置')
-						vm.startAccelerometer();
+					  vm.onLoad();
+
 					} else if (res.cancel) {
 						console.log('用户点击取消')
 					}
@@ -292,6 +289,7 @@ Page({
 				content: '点击取消，返回继续寻车',
 				success(res) {
 					if (res.confirm) {
+						vm.stopAccelerometer();
 						vm.setData({
 							startTxt: 'end',
 							resetTxt: 'back'
@@ -306,6 +304,7 @@ Page({
 	},
 	onLoad: function() {
 		var vm = this;
+    vm.restValue();
 		//先绘制坐标图
 		context = vm.createCanvas();
 		//绘制原点
@@ -315,18 +314,16 @@ Page({
 		context.setStrokeStyle('#000000');
 		context.stroke();
 		context.draw(true);
-
+	
 		//需要调整文字
 		
 		wx.getStorage({
 		  key: 'orderNo',
 		  success (res) {
-			console.log("res:"+res.data);
 		    orderNo = res.data;
-			console.log("orderNo:"+orderNo);
 			var userId = "0332zwpn0N0aBm1Rcnmn0xmRpn02zwpi";
 			wx.request({
-				url: 'http://16861e90p7.imwork.net/icmh-client/common/getPdrRecord.action', 
+        url: 'http://47.92.174.67/icmh-client/common/getPdrRecord.action', 
 				data: JSON.stringify({
 					userId:userId,
 					orderNo:orderNo
@@ -336,23 +333,39 @@ Page({
 				},
 				method: 'POST',
 				success(res) {
+					for(var i = 0;i< res.data.data.length;i++){
+						var transRotate = res.data.data[i].rotate;
+						var viewredirect ;
+						if(transRotate <=180){
+							transRotate = parseInt(transRotate) + 180 ;
+							viewredirect = vm.getRedirect(transRotate)
+						}else{
+							transRotate = parseInt(transRotate) - 180 ;
+							viewredirect = vm.getRedirect(transRotate)
+						}
+						
+						res.data.data[i].rotate = transRotate;
+						res.data.data[i].direction = viewredirect;
+					}
 					vm.setData({
 						recordList: res.data.data
 					});
-					console.log("recordList:"+vm.data.recordList);
 					var record = vm.data.recordList[0];
 					var rotate = record.rotate;
+					lastX = vm.data.recordList[0].x;
+					lastY = vm.data.recordList[0].y;
+					var summary ;
 					if(rotate <= 180){
-						vm.getRedirect(parseInt(rotate)+180);
-						rotate = parseInt(rotate) + 180 ;
+						summary = vm.getRedirect(parseInt(rotate));
+						rotate = parseInt(rotate);
 					}else{
-						vm.getRedirect(parseInt(rotate)-180)
-						rotate = parseInt(rotate) - 180 ;
+						summary=vm.getRedirect(parseInt(rotate))
+						rotate = parseInt(rotate);
 					}
-					vm.drawCanvas(context,vm.data.recordList);
+					 vm.drawCanvas(vm.data.recordList);
 					wx.showModal({
 						title: '建议将起始方向罗盘度数调整为',
-						content: rotate+'°'+ vm.data.initDirection,
+						content: rotate+'°'+ summary,
 						showCancel: false,
 						confirmText: '知道了'
 					});
@@ -364,61 +377,49 @@ Page({
 	},
 	getRedirect:function(rotate){
 		var vm = this;
+		var initDirection = '无';
 		switch (true) {
-			case rotate < 22.5:
-				vm.setData({
-					initDirection: "北"
-				});
+			case rotate < 22.5 || rotate  > 337.5:
+				initDirection = "北";
 				break;
 			case rotate > 22.5 && rotate < 67.5:
-				vm.setData({
-					initDirection: "东北"
-				});
+				initDirection="东北"
 				break;
 			case rotate > 67.5 && rotate < 112.5:
-				vm.setData({
-					initDirection: "东"
-				});
+				initDirection="东"
 				break;
 			case rotate > 112.5 && rotate < 157.5:
-				vm.setData({
-					initDirection: "东南"
-				});
+				initDirection="东南"
 				break;
 			case rotate > 157.5 && rotate < 202.5:
-				vm.setData({
-					initDirection: "南"
-				});
+				initDirection="南"
 				break;
 			case rotate > 202.5 && rotate < 247.5:
-				vm.setData({
-					initDirection: "西南"
-				});
+				initDirection="西南"
 				break;
 			case rotate > 247.5 && rotate < 292.5:
-				vm.setData({
-					initDirection: "西"
-				});
+				initDirection="西"
 				break;
 			case rotate > 292.5 && rotate < 337.5:
-				vm.setData({
-					initDirection: "西北"
-				});
+				initDirection="西北"
 				break;
 		}
+		return initDirection;
 	},
-	dramCanvas: function(context) {
-
-		let pathColor = 'blue';
+	dramCanvas: function() {
+		let pathColor = 'red';
+		console.log("从点["+parseFloat(lastX).toFixed(1)+","+parseFloat(lastY).toFixed(1)+"]移动到点[" + parseFloat(x).toFixed(1) + "," + parseFloat(y).toFixed(1) + "]");
 		context.beginPath();
-		context.moveTo(parseFloat(lastX) + parseFloat(450), parseFloat(lastY) + parseFloat(450));
-		context.lineTo(parseFloat(x) + parseFloat(450), parseFloat(y) + parseFloat(450));
+    context.setLineWidth(2)
+    context.moveTo(parseFloat(lastX - 450), parseFloat(lastY - 450));
+    context.lineTo(parseFloat(x - 450), parseFloat(y - 450));
 		context.setStrokeStyle(pathColor);
 		context.closePath();
 		context.stroke();
 		context.draw(true);
 	},
-	drawCanvas:function(context,records){
+	drawCanvas:function(records){
+    context.translate(-450,-450)
 		if(!records){
 			return ;
 		}
@@ -428,16 +429,22 @@ Page({
 			yNum.push(records[i].y)
 		}
 		context.beginPath();
-		context.moveTo(0,0);
-		for (let index = xNum.length -1; index > 0; index--) {
-			let xElement = xNum[index];
-		    let yElement = yNum[index]
-		    context.lineTo(x, y)
+		context.moveTo(xNum[0],yNum[0]);
+		for (let index =0; index < xNum.length; index++) {
+      let xElement = xNum[index];
+      let yElement = yNum[index];
+      if (xNum[records.length - 1] == xElement && yElement == yNum[records.length - 1]){
+        context.moveTo(xElement, yElement)
+      }else {
+        context.lineTo(xElement, yElement)
+      }
+		  
 		}
 		context.setStrokeStyle("blue");
 		context.closePath();
 		context.stroke();
 		context.draw(true);
+		return context;
 	},
 	createCanvas: function() {
 		var vm = this;
@@ -517,7 +524,6 @@ Page({
 			timeOfNow = Date.now();
 			if (timeOfNow - timeOfLastPeak >= TimeInterval &&
 				(peakOfWave - valleyOfWave >= ThreadValue)) {
-				console.log("本次计算阈值:" + ThreadValue + ";本次波峰:" + peakOfWave + ";本次波谷:" + valleyOfWave);
 				timeOfThisPeak = timeOfNow;
 				/*
 				 * 更新界面的处理，不涉及到算法
@@ -529,7 +535,6 @@ Page({
 				// mStepListeners.countStep();
 				var current = step++;
 				app.globalData.currentStep = current;
-				console.log("当前步数:" + app.globalData.currentStep);
 				vm.setData({
 					currentStep: current
 				});
@@ -590,7 +595,7 @@ Page({
 		} else {
 			tempThread = vm.averageValue(tempValue, ValueNum);
 			for (var i = 1; i < ValueNum; i++) {
-				tempValue[i - 1] = stempValue[i];
+				tempValue[i - 1] = tempValue[i];
 			}
 			tempValue[ValueNum - 1] = value;
 		}
@@ -648,5 +653,26 @@ Page({
 		}
 
 
-	}
+	},
+  restValue:function(){
+    this.setData({
+      resetTxt: 'reset',
+      startTxt: 'go',
+      recordList: [],
+      start: true,
+      stop: false,
+      x: "",
+      y: "",
+      z: "",
+      currentStep: 0, //总步数
+      direction: '无',
+      lastRotate: 0,
+      stepData: [],
+      xScroll: "",
+      yScroll: "",
+      nowRotate: 0,
+      initRotate: 0,
+      initDirection: null
+    })
+  }
 })
