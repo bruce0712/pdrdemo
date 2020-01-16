@@ -222,14 +222,14 @@ Page({
 					dataJson.y = (parseFloat(y) + parseFloat(450)).toFixed(2);
 					dataJson.waitCalRotate = waitCalRotate;
 					data.push(dataJson);
-				
+
+          vm.dramCanvas();
 					lastX = x;
 					lastY = y;
 
 					lastRotate = calRatate; //发生方向偏移后将当前点作为起始点
 					lastStep = nowStep; //发生方向偏移后将当前步数作为起始步数
 					lastTime = nowTime; //发生方向偏移后将当前时间作为起始时间
-          vm.dramCanvas();
 				}
 			}
 		});
@@ -410,7 +410,7 @@ Page({
 		let pathColor = 'red';
 		console.log("从点["+parseFloat(lastX).toFixed(1)+","+parseFloat(lastY).toFixed(1)+"]移动到点[" + parseFloat(x).toFixed(1) + "," + parseFloat(y).toFixed(1) + "]");
 		context.beginPath();
-    context.setLineWidth(2)
+    context.setLineWidth(2);
     context.moveTo(parseFloat(lastX - 450), parseFloat(lastY - 450));
     context.lineTo(parseFloat(x - 450), parseFloat(y - 450));
 		context.setStrokeStyle(pathColor);

@@ -67,7 +67,7 @@
   flex-direction: column;
   justify-content:center;
   background: transparent;
-  position: absolute;
+  position: fixed;
   bottom: 60rpx;
 }
 
